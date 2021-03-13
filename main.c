@@ -25,10 +25,13 @@ int main(void) {
 	sei();
 	while (1) {
 		uint8_t buff[50];
-
 		owi_reset();
-		while (owi_getState() != OWI_PRESENCE)
+		while (owi_getState() != OWI_PRESENCE && owi_getState() != OWI_IDLE)
 			;
+		if(owi_getState() == OWI_IDLE){
+			_delay_ms(100);
+			continue;
+		}
 
 		owi_write_byte(0xcc);
 		while (owi_getState() != OWI_WRITE_BYTE_OK)
@@ -38,8 +41,12 @@ int main(void) {
 			;
 		_delay_ms(1000);
 		owi_reset();
-		while (owi_getState() != OWI_PRESENCE)
+		while (owi_getState() != OWI_PRESENCE && owi_getState() != OWI_IDLE)
 			;
+		if(owi_getState() == OWI_IDLE){
+			_delay_ms(100);
+			continue;
+		}
 		owi_write_byte(0xcc);
 		while (owi_getState() != OWI_WRITE_BYTE_OK)
 			;
@@ -52,10 +59,10 @@ int main(void) {
 			while (owi_getState() != OWI_READ_BYTE_OK)
 				;
 			ddd[i] = owi_get_byte();
-			sprintf((char*) buff, "%02x", ddd[i]);
+			sprintf((char*) buff, "%02X", ddd[i]);
 			uart_puts(buff);
 		}
-		sprintf((char*) buff, "\n\r");
+		sprintf((char*) buff, "(%02X)\n\r", owi_calc_crc(ddd, 8));
 		uart_puts(buff);
 		int16_t ttt = *(int16_t*) ddd;
 		char minus = ' ';

@@ -25,5 +25,7 @@ void owi_reset(void);
 void owi_write_byte(uint8_t byte);
 void owi_read_byte(void);
 uint8_t owi_get_byte(void);
+uint8_t owi_calc_crc(uint8_t *mas, uint8_t Len);
+
 
 #endif /* OWI_H_ */
