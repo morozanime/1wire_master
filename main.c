@@ -30,6 +30,8 @@ int main(void) {
 			;
 		if(owi_getState() == OWI_IDLE){
 			_delay_ms(100);
+//			sprintf((char*)buff,"%u\n\r", tp);
+//			uart_puts(buff);
 			continue;
 		}
 
